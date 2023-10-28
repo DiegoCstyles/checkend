@@ -15,7 +15,7 @@
     "mime-types": "^2.1.35",
     "node-fetch": "^3.3.2",
     "sqlite3": "^5.1.6",
-    "streamifier": "^0.1.1"
+    "streamifier": "^0.1.1",
     "@vercel/postgres": "^2.1.4"
   },
   "devDependencies": {
