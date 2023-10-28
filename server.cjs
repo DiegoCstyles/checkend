@@ -125,26 +125,17 @@ app.get('/api/lastRiskItems', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT id, title, description, planDescription, planFiles, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed
+      SELECT id, title, description
       FROM risk_items
       ORDER BY id DESC
-      LIMIT $1
     `;
-        const result = await client.query(fetchQuery, [numberOfLastItems]);
+        const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
         const lastRiskItems = result.rows.map(row => ({
             id: row.id,
             title: row.title,
             description: row.description,
-            planDescription: row.planDescription,
-            planFiles: row.planFiles,
-            likelihood: row.likelihood,
-            impact: row.impact,
-            date: row.date,
-            responsibleChecklist: row.responsibleChecklist,
-            responsiblePlan: row.responsiblePlan,
-            completed: row.completed,
         }));
         res.json(lastRiskItems);
     }
