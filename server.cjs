@@ -29,7 +29,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const insertQuery = `
@@ -85,7 +85,7 @@ app.get('/api/riskItems', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const fetchQuery = `
@@ -121,7 +121,7 @@ app.get('/api/lastRiskItems', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const fetchQuery = `
@@ -162,7 +162,7 @@ app.put('/api/riskItems/:id', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const updateQuery = `
@@ -187,7 +187,7 @@ app.get('/api/appliedChecklists', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const fetchQuery = `
@@ -219,7 +219,7 @@ app.post('/api/appliedChecklists', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const insertQuery = `
@@ -246,7 +246,7 @@ app.get('/api/chartData', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const fetchQuery = `
@@ -277,7 +277,7 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
         // Use the pool to connect to the PostgreSQL database
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         // Define the SQL query to retrieve the plan file
@@ -380,7 +380,7 @@ app.post('/api/approveRiskItem/:riskId', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const result = await client.query(updateQuery, [riskId]);
@@ -409,7 +409,7 @@ app.post('/api/rejectRiskItem/:riskId', async (req, res) => {
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
-            connectionString: process.env.POSTGRES_URL, // Set your database connection string as an environment variable in Vercel.
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
         const result = await client.query(updateQuery, [riskId]);
