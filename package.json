@@ -16,6 +16,7 @@
     "node-fetch": "^3.3.2",
     "sqlite3": "^5.1.6",
     "streamifier": "^0.1.1"
+    "@vercel/postgres": "^2.1.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.15",
