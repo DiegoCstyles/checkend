@@ -33,14 +33,14 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
         });
         await client.connect();
         const insertQuery = `
-      INSERT INTO risk_items (title, description, planDescription, planFiles, planFilesName, planApproval, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed)
+      INSERT INTO risk_items (title, description, plandescription, planFiles, planFilesName, planApproval, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING id
     `;
         const values = [
             newRisk.title || '',
             newRisk.description || '',
-            newRisk.planDescription || '',
+            newRisk.plandescription || '',
             planFiles,
             planFilesName,
             newRisk.planApproval || '',
@@ -59,7 +59,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
             id,
             title: newRisk.title,
             description: newRisk.description,
-            planDescription: newRisk.planDescription,
+            plandescription: newRisk.plandescription,
             planFiles: planFiles,
             planFilesName: planFilesName,
             planApproval: newRisk.planApproval,
