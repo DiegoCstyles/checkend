@@ -241,14 +241,14 @@ app.get('/api/chartData', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT planApproval
+      SELECT planapproval
       FROM risk_items
     `;
         const { rows } = await client.query(fetchQuery);
         // Release the client
         await client.end();
         const chartData = rows.map(row => ({
-            planApproval: row.planApproval,
+            planapproval: row.planapproval,
         }));
         res.json(chartData);
     }
