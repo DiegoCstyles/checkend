@@ -277,6 +277,7 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
       FROM risk_items
       WHERE id = $1
     `;
+        console.log('fetchQuery:', fetchQuery);
         // Execute the query
         const { rows } = await client.query(fetchQuery, [riskId]);
         // Release the client back to the pool
