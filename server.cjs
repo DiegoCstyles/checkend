@@ -291,8 +291,8 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
         const riskItem = rows[0];
         
 
-        const planFilesData = riskItem.planFiles;
-        const fileName = riskItem.planFilesName; // Replace with the actual file name
+        const planFilesData = riskItem.planfiles;
+        const fileName = riskItem.planfilesname; // Replace with the actual file name
         console.log('planFilesData:', planFilesData);
 console.log('fileName:', fileName);
         const contentType = getContentTypeFromByteA(fileName);
