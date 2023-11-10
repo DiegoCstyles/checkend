@@ -278,15 +278,18 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
           WHERE id = ${riskId}
         `;
         console.log('fetchQuery:', fetchQuery);
+        
         // Execute the query
         const { rows } = await client.query(fetchQuery);
-        // Release the client back to the pool
+        console.log('Rows:', rows); // Log the rows to inspect the structure
+        
         // Release the client
         await client.end();
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Risk item not found' });
         }
         const riskItem = rows[0];
+        
 
         const planFilesData = riskItem.planFiles;
         const fileName = riskItem.planFilesName; // Replace with the actual file name
