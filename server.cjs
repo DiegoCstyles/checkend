@@ -286,43 +286,22 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
             return res.status(404).json({ error: 'Risk item not found' });
         }
         const riskItem = rows[0];
-        if (Buffer.isBuffer(riskItem.planFiles)) {
-            const planFilesData = riskItem.planFiles;
-            const contentType = getContentTypeFromByteA(riskItem.planFilesName);
-            if (contentType === 'application/pdf') {
-                res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.pdf`);
-                res.setHeader('Content-Type', contentType);
-            }
-            else if (contentType === 'image/png') {
-                res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.png"`);
-                res.setHeader('Content-Type', contentType);
-            }
-            else {
-                console.error('Unsupported file type: buffer', contentType);
-                return res.status(500).json({ error: 'Unsupported file type' });
-            }
-            res.end(planFilesData);
+
+        const planFilesData = riskItem.planFiles;
+        const contentType = getContentTypeFromByteA(riskItem.planFilesName);
+        if (contentType === 'application/pdf') {
+            res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.pdf`);
+            res.setHeader('Content-Type', contentType);
+        }
+        else if (contentType === 'image/png') {
+            res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.png"`);
+            res.setHeader('Content-Type', contentType);
         }
         else {
-            // Handle the case where 'planFiles' is stored as a Blob
-            const planFilesData = riskItem.planFiles; // Assuming Blob data is stored as Uint8Array
-            const fileName = riskItem.planFilesName; // Replace with the actual file name
-            const contentType = getContentTypeFromBlob(planFilesData, fileName);
-            if (contentType === 'application/pdf') {
-                res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.pdf`);
-                res.setHeader('Content-Type', contentType);
-            }
-            else if (contentType === 'image/png') {
-                res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.png"`);
-                res.setHeader('Content-Type', contentType);
-            }
-            else {
-                console.error('Unsupported file type: blob', contentType);
-                return res.status(500).json({ error: 'Unsupported file type' });
-            }
-            const readableStream = streamifier.createReadStream(planFilesData);
-            readableStream.pipe(res);
+            console.error('Unsupported file type: buffer', contentType);
+            return res.status(500).json({ error: 'Unsupported file type' });
         }
+        res.end(planFilesData);
     }
     catch (error) {
         console.error('Error downloading plan file:', error);
