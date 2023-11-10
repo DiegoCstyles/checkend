@@ -279,7 +279,7 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
         `;
         console.log('fetchQuery:', fetchQuery);
         // Execute the query
-        const { rows } = await client.query(fetchQuery, { id: riskId });
+        const { rows } = await client.query(fetchQuery, [riskId]);
         // Release the client back to the pool
         // Release the client
         await client.end();
