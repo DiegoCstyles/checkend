@@ -273,10 +273,10 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
         await client.connect();
         // Define the SQL query to retrieve the plan file
         const fetchQuery = `
-      SELECT planFiles, planFilesName
-      FROM risk_items
-      WHERE id = $1
-    `;
+          SELECT id, planFiles, planFilesName
+          FROM risk_items
+          WHERE id = $1
+        `;
         console.log('fetchQuery:', fetchQuery);
         // Execute the query
         const { rows } = await client.query(fetchQuery, [riskId]);
