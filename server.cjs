@@ -275,11 +275,11 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
         const fetchQuery = `
           SELECT id, planFiles, planFilesName
           FROM risk_items
-          WHERE id = $id
+          WHERE id = :id
         `;
         console.log('fetchQuery:', fetchQuery);
         // Execute the query
-        const { rows } = await client.query(fetchQuery, [riskId]);
+        const { rows } = await client.query(fetchQuery, { id: riskId });
         // Release the client back to the pool
         // Release the client
         await client.end();
