@@ -157,10 +157,11 @@ app.put('/api/riskItems/:id', async (req, res) => {
         });
         await client.connect();
         const updateQuery = `
-      UPDATE risk_items
-      SET ${Object.keys(updateField)[0]} = $1
-      WHERE id = $2
-    `;
+          UPDATE risk_items
+          SET ${Object.keys(updateField)[0]} = '${updateField[Object.keys(updateField)[0]]}'
+          WHERE id = ${id}
+        `;
+        console.log('updateQuery:', updateQuery);
         await client.query(updateQuery, [Object.values(updateField)[0], id]);
         // Release the client
         await client.end();
@@ -277,11 +278,9 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
           FROM risk_items
           WHERE id = ${riskId}
         `;
-        console.log('fetchQuery:', fetchQuery);
         
         // Execute the query
         const { rows } = await client.query(fetchQuery);
-        console.log('Rows:', rows); // Log the rows to inspect the structure
         
         // Release the client
         await client.end();
@@ -289,12 +288,9 @@ app.get('/api/downloadPlanFile/:id', async (req, res) => {
             return res.status(404).json({ error: 'Risk item not found' });
         }
         const riskItem = rows[0];
-        
-
         const planFilesData = riskItem.planfiles;
         const fileName = riskItem.planfilesname; // Replace with the actual file name
-        console.log('planFilesData:', planFilesData);
-console.log('fileName:', fileName);
+
         const contentType = getContentTypeFromByteA(fileName);
         if (contentType === 'application/pdf') {
             res.setHeader('Content-Disposition', `attachment; filename="Plan_${riskId}.pdf`);
