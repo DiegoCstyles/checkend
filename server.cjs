@@ -162,7 +162,7 @@ app.put('/api/riskItems/:id', async (req, res) => {
           WHERE id = ${id}
         `;
         console.log('updateQuery:', updateQuery);
-        await client.query(updateQuery, [Object.values(updateField)[0], id]);
+        await client.query(updateQuery);
         // Release the client
         await client.end();
         res.status(200).json({ message: 'Risk item updated successfully' });
