@@ -131,7 +131,6 @@ app.get('/api/lastRiskItems', async (req, res) => {
           FROM risk_items
           ORDER BY id DESC
         `;
-        console.log('fetchQuery', fetchQuery);
         const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
@@ -140,7 +139,6 @@ app.get('/api/lastRiskItems', async (req, res) => {
             title: row.title,
             description: row.description,
         }));
-        console.log('lastRiskItems', lastRiskItems);
         res.json(lastRiskItems);
     }
     catch (error) {
@@ -187,9 +185,9 @@ app.get('/api/appliedChecklists', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-          SELECT id, title, dateapplied
+          SELECT id, title
           FROM applied_checklists
-          LIMIT $1 OFFSET $2
+          LIMIT ${itemsPerPage} OFFSET ${offset}
         `;
         console.log('fetchQuery',fetchQuery)
         const { rows } = await client.query(fetchQuery, [itemsPerPage, offset]);
@@ -197,8 +195,7 @@ app.get('/api/appliedChecklists', async (req, res) => {
         await client.end();
         const appliedChecklists = rows.map(row => ({
             id: row.id,
-            title: row.title,
-            dateapplied: row.dateapplied,
+            title: row.title
         }));
         res.json(appliedChecklists);
     }
