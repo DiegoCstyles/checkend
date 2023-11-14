@@ -127,10 +127,11 @@ app.get('/api/lastRiskItems', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT id, title, description
-      FROM risk_items
-      ORDER BY id DESC
-    `;
+          SELECT id, title, description
+          FROM risk_items
+          ORDER BY id DESC
+        `;
+        console.log('fetchQuery', fetchQuery);
         const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
@@ -139,6 +140,7 @@ app.get('/api/lastRiskItems', async (req, res) => {
             title: row.title,
             description: row.description,
         }));
+        console.log('lastRiskItems', lastRiskItems);
         res.json(lastRiskItems);
     }
     catch (error) {
