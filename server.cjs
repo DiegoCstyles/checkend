@@ -21,6 +21,7 @@ app.use((0, cors_1.default)());
 // Configure multer to handle file uploads
 const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
+
 app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
     const newRisk = JSON.parse(req.body.json_data || '{}');
     const planFiles = req.file ? req.file.buffer : null; // Get the uploaded file data
@@ -78,6 +79,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
         return res.status(500).json({ error: 'Failed to add risk item to database' });
     }
 });
+
 // New endpoint to fetch all risk items
 app.get('/api/riskItems', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
@@ -117,6 +119,7 @@ app.get('/api/riskItems', async (req, res) => {
         return res.status(500).json({ error: 'Failed to fetch risk items from the database' });
     }
 });
+
 app.get('/api/lastRiskItems', async (req, res) => {
     const numberOfLastItems = 5; // Adjust as needed
     try {
@@ -145,6 +148,7 @@ app.get('/api/lastRiskItems', async (req, res) => {
         return res.status(500).json({ error: 'Failed to fetch last risk items from the database' });
     }
 });
+
 app.put('/api/riskItems/:id', async (req, res) => {
     const id = req.params.id;
     const updateField = req.body; // This should be an object containing the field to update and its new value
@@ -173,6 +177,7 @@ app.put('/api/riskItems/:id', async (req, res) => {
         return res.status(500).json({ error: 'Failed to update risk item in the database' });
     }
 });
+
 app.get('/api/appliedChecklists', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
     const itemsPerPage = parseInt(req.query.itemsPerPage) || 5; // Default to 5 items per page
@@ -203,6 +208,7 @@ app.get('/api/appliedChecklists', async (req, res) => {
         return res.status(500).json({ error: 'Failed to fetch applied checklists from the database' });
     }
 });
+
 app.post('/api/appliedChecklists', async (req, res) => {
     const newAppliedChecklist = req.body;
     if (!newAppliedChecklist) {
@@ -235,6 +241,7 @@ app.post('/api/appliedChecklists', async (req, res) => {
         return res.status(500).json({ error: 'Failed to add applied checklist to the database' });
     }
 });
+
 app.get('/api/chartData', async (req, res) => {
     try {
         // Create a client for the database connection
@@ -256,6 +263,7 @@ app.get('/api/chartData', async (req, res) => {
         return res.status(500).json({ error: 'Failed to fetch chart data from the database' });
     }
 });
+
 // New endpoint to download a plan file
 app.get('/api/downloadPlanFile/:id', async (req, res) => {
     const riskId = req.params.id;
@@ -338,6 +346,7 @@ function getContentTypeFromBlob(blob, fileName) {
     const contentType = mimeTypes.lookup(fileExtension) || 'application/octet-stream';
     return contentType;
 }
+
 app.post('/api/approveRiskItem/:riskId', async (req, res) => {
     const { riskId } = req.params;
     if (!riskId) {
@@ -367,6 +376,7 @@ app.post('/api/approveRiskItem/:riskId', async (req, res) => {
         return res.status(500).json({ error: 'Failed to approve plan to the database' });
     }
 });
+
 app.post('/api/rejectRiskItem/:riskId', async (req, res) => {
     const { riskId } = req.params;
     if (!riskId) {
