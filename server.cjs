@@ -161,7 +161,7 @@ app.put('/api/riskItems/:id', async (req, res) => {
           SET ${Object.keys(updateField)[0]} = '${updateField[Object.keys(updateField)[0]]}'
           WHERE id = ${id}
         `;
-        console.log('updateQuery:', updateQuery);
+
         await client.query(updateQuery);
         // Release the client
         await client.end();
@@ -242,16 +242,13 @@ app.get('/api/chartData', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT planApproval
-      FROM risk_items
-    `;
-        const { rows } = await client.query(fetchQuery);
-        // Release the client
-        await client.end();
-        const chartData = rows.map(row => ({
-            planApproval: row.planApproval,
-        }));
-        res.json(chartData);
+          SELECT planApproval
+          FROM risk_items
+        `;
+        const { rows } = await client.query(fetchQuery); // Release the client 
+        console.log('fetchQuery:', fetchQuery);
+        await client.end(); 
+        res.json(rows);
     }
     catch (error) {
         console.error('Error fetching chart data:', error);
