@@ -22,7 +22,6 @@ app.use((0, cors_1.default)());
 const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
-    console.log('Raw Request Body:', req.body);
     const newRisk = JSON.parse(req.body.json_data || '{}');
     const planFiles = req.file ? req.file.buffer : null; // Get the uploaded file data
     const planFilesName = req.file ? req.file.originalname : '';
@@ -189,7 +188,7 @@ app.get('/api/appliedChecklists', async (req, res) => {
           FROM applied_checklists
           LIMIT ${itemsPerPage} OFFSET ${offset}
         `;
-        console.log('fetchQuery',fetchQuery)
+        
         const { rows } = await client.query(fetchQuery);
         // Release the client
         await client.end();
