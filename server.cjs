@@ -190,7 +190,7 @@ app.get('/api/appliedChecklists', async (req, res) => {
           LIMIT ${itemsPerPage} OFFSET ${offset}
         `;
         console.log('fetchQuery',fetchQuery)
-        const { rows } = await client.query(fetchQuery, [itemsPerPage, offset]);
+        const { rows } = await client.query(fetchQuery);
         // Release the client
         await client.end();
         const appliedChecklists = rows.map(row => ({
