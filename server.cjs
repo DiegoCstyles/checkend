@@ -37,7 +37,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
           RETURNING id
         `;
-        console.log('insertQuery: ', insertQuery)
+
         const values = [
             newRisk.title || '',
             newRisk.description || '',
@@ -53,7 +53,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
             newRisk.completed ? 1 : 0,
         ];
         const result = await client.query(insertQuery, values);
-        console.log('result: ', result)
+
         const id = result.rows[0].id;
         // Release the client
         await client.end();
@@ -248,7 +248,7 @@ app.get('/api/chartData', async (req, res) => {
           FROM risk_items
         `;
         const { rows } = await client.query(fetchQuery); // Release the client 
-        console.log('fetchQuery:', fetchQuery);
+
         await client.end(); 
         res.json(rows);
     }
