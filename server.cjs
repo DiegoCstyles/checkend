@@ -187,17 +187,18 @@ app.get('/api/appliedChecklists', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT id, title, dateApplied
-      FROM applied_checklists
-      LIMIT $1 OFFSET $2
-    `;
+          SELECT id, title, dateapplied
+          FROM applied_checklists
+          LIMIT $1 OFFSET $2
+        `;
+        console.log('fetchQuery',fetchQuery)
         const { rows } = await client.query(fetchQuery, [itemsPerPage, offset]);
         // Release the client
         await client.end();
         const appliedChecklists = rows.map(row => ({
             id: row.id,
             title: row.title,
-            dateApplied: row.dateApplied,
+            dateapplied: row.dateapplied,
         }));
         res.json(appliedChecklists);
     }
