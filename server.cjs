@@ -36,7 +36,9 @@ app.post('/api/login', async (req, res) => {
     await client.connect();
 
     // Sanitize the email for safe string interpolation
+    console.log('Email before sanitization:', email);
     const sanitizedEmail = format('%s', email);  
+    console.log('Sanitized Email:', sanitizedEmail);
     // Retrieve user from the database
     // Assuming sanitizedEmail is the sanitized value of the email
     const loginQuery = format('SELECT * FROM users WHERE email = %L', sanitizedEmail);
