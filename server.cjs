@@ -9,6 +9,8 @@ const cors_1 = __importDefault(require("cors"));
 const multer_1 = __importDefault(require("multer")); // Import multer for handling file uploads
 const bodyParser = require('body-parser');
 const streamifier = require('streamifier'); // Import the 'streamifier' package
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 // Import the 'mime-types' library
 const mimeTypes = require('mime-types');
 const app = (0, express_1.default)();
@@ -21,6 +23,39 @@ app.use((0, cors_1.default)());
 // Configure multer to handle file uploads
 const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Connect to the database
+    const client = new Client({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    });
+    await client.connect();
+
+    // Retrieve user from the database
+    const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = result.rows[0];
+
+    // Check if the user exists and the password is correct
+    if (user && await bcrypt.compare(password, user.password)) {
+      // Generate a JWT token
+      const token = jwt.sign({ userId: user.id }, 'your-secret-key', { expiresIn: '1h' });
+
+      // Send the token to the client
+      res.json({ token });
+    } else {
+      res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Disconnect from the database
+    await client.end();
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
 
 app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
     const newRisk = JSON.parse(req.body.json_data || '{}');
