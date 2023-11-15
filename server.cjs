@@ -38,9 +38,10 @@ app.post('/api/login', async (req, res) => {
     // Sanitize the email for safe string interpolation
     const sanitizedEmail = format('%s', email);  
     // Retrieve user from the database
-    const loginQuery = 'SELECT * FROM users WHERE email = $1';
-    console.log('loginQuery: ', loginQuery);
-    const result = await client.query(loginQuery, [sanitizedEmail]);
+    // Assuming sanitizedEmail is the sanitized value of the email
+    const loginQuery = format('SELECT * FROM users WHERE email = %L', sanitizedEmail);
+    console.log('loginQuery:', loginQuery);
+    const result = await client.query(loginQuery);
     const user = result.rows[0];
     
     // Check if the user exists and the password is correct
