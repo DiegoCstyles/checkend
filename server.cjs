@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const streamifier = require('streamifier'); // Import the 'streamifier' package
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const format = require('pg-format');
 // Import the 'mime-types' library
 const mimeTypes = require('mime-types');
 const app = (0, express_1.default)();
@@ -34,10 +35,12 @@ app.post('/api/login', async (req, res) => {
     });
     await client.connect();
 
+    // Sanitize the email for safe string interpolation
+    const sanitizedEmail = format('%s', email);  
     // Retrieve user from the database
-    const loginQuery = 'SELECT * FROM users WHERE email = $1';
+    const loginQuery = 'SELECT * FROM users WHERE email = ${sanitizedEmail}';
     console.log('loginQuery: ', loginQuery);
-    const result = await client.query(loginQuery, [email]);
+    const result = await client.query(loginQuery);
     const user = result.rows[0];
     
     // Check if the user exists and the password is correct
