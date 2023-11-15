@@ -39,6 +39,7 @@ app.post('/api/login', async (req, res) => {
     // Retrieve user from the database
     const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
     const result = await client.query(loginQuery);
+      onsole.log('result:', result);
     const user = result.rows[0];
       console.log('user:', user);
     console.log('Stored Password:', user.password);
