@@ -28,8 +28,6 @@ const upload = (0, multer_1.default)({ storage: storage });
 app.post('/api/login', async (req, res) => {
   const email = req.body.email;
   const password  = req.body.password;
-  console.log('Received email:', email);
-  console.log('Received password:', password);
 
   try {
     // Connect to the database
@@ -40,12 +38,14 @@ app.post('/api/login', async (req, res) => {
 
     // Retrieve user from the database
     const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
-    console.log('loginQuery:', loginQuery);
     const result = await client.query(loginQuery);
     const user = result.rows[0];
+    console.log('Stored Password:', user.password);
+   console.log('Entered Password:', password);
     
     // Check if the user exists and the password is correct
     if (user && await bcrypt.compare(password, user.password)) {
+        console.log('Password Match:', passwordMatch);
       // Generate a JWT token
       const token = jwt.sign({ userId: user.id }, 'k01', { expiresIn: '1h' });
         console.log('token: ', token)
