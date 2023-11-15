@@ -26,8 +26,9 @@ const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 
 app.post('/api/login', async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
+  console.log('Received email:', email);
+  console.log('Received password:', password);
 
   try {
     // Connect to the database
@@ -35,9 +36,6 @@ app.post('/api/login', async (req, res) => {
             connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
     });
     await client.connect();
-
-    console.log('email:', email);
-    console.log('password:', password);
         
     // Retrieve user from the database
     const loginQuery = `SELECT * FROM users WHERE email = ${email}`
