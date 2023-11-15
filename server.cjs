@@ -39,12 +39,14 @@ app.post('/api/login', async (req, res) => {
     // Retrieve user from the database
     const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
     const result = await client.query(loginQuery);
-      console.log('Result rows:', result.rows);
-       console.log('result:', result);
     const user = result.rows[0];
-      console.log('user:', user);
-    console.log('Stored Password:', user.password);
-   console.log('Entered Password:', password);
+ 
+    console.log('Result rows:', result.rows);
+    console.log('result:', result);
+    console.log('user:', user);
+    console.log('Stored Password:', user ? user.password : 'User not found');
+    console.log('Entered Password:', password);
+
     
     // Check if the user exists and the password is correct
     if (user && await bcrypt.compare(password, user.password)) {
