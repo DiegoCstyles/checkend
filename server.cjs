@@ -26,7 +26,8 @@ const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 
 app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email;
+  const password = req.body.password;
 
   try {
     // Connect to the database
@@ -35,13 +36,11 @@ app.post('/api/login', async (req, res) => {
     });
     await client.connect();
 
-    // Sanitize the email for safe string interpolation
-    console.log('Email before sanitization:', email);
-    const sanitizedEmail = format('%s', email);  
-    console.log('Sanitized Email:', sanitizedEmail);
+    console.log('email:', email);
+    console.log('password:', password);
+        
     // Retrieve user from the database
-    // Assuming sanitizedEmail is the sanitized value of the email
-    const loginQuery = format('SELECT * FROM users WHERE email = %L', sanitizedEmail);
+    const loginQuery = `SELECT * FROM users WHERE email = ${email}`
     console.log('loginQuery:', loginQuery);
     const result = await client.query(loginQuery);
     const user = result.rows[0];
