@@ -38,7 +38,7 @@ app.post('/api/login', async (req, res) => {
     await client.connect();
 
     // Retrieve user from the database
-    const loginQuery = "SELECT * FROM users WHERE email =  '${email}'";
+    const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
     console.log('loginQuery:', loginQuery);
     const result = await client.query(loginQuery);
     const user = result.rows[0];
