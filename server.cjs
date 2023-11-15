@@ -37,7 +37,7 @@ app.post('/api/login', async (req, res) => {
     // Retrieve user from the database
     const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
     const user = result.rows[0];
-
+    console.log('result', result);
     // Check if the user exists and the password is correct
     if (user && await bcrypt.compare(password, user.password)) {
       // Generate a JWT token
