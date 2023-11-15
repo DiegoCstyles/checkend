@@ -26,7 +26,8 @@ const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 
 app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email;
+  const password  = req.body.password;
   console.log('Received email:', email);
   console.log('Received password:', password);
 
@@ -38,7 +39,7 @@ app.post('/api/login', async (req, res) => {
     await client.connect();
 
     // Retrieve user from the database
-    const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
+    const loginQuery = `SELECT * FROM users WHERE email = ${email}`;
     console.log('loginQuery:', loginQuery);
     const result = await client.query(loginQuery);
     const user = result.rows[0];
