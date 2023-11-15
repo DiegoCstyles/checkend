@@ -29,8 +29,8 @@ app.post('/api/login', async (req, res) => {
 
   try {
     // Connect to the database
-    const client = new Client({
-      connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    const client = (0, postgres_1.createClient)({
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
     });
     await client.connect();
 
