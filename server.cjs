@@ -41,7 +41,7 @@ app.post('/api/login', async (req, res) => {
     // Check if the user exists and the password is correct
     if (user && await bcrypt.compare(password, user.password)) {
       // Generate a JWT token
-      const token = jwt.sign({ userId: user.id }, 'your-secret-key', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id }, 'k01', { expiresIn: '1h' });
 
       // Send the token to the client
       res.json({ token });
