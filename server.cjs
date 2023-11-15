@@ -45,26 +45,15 @@ app.post('/api/login', async (req, res) => {
     console.log('result:', result);
     console.log('user:', user);
 
-    if (user) {
-      // Check if the user exists and the password is correct
-      console.log('Stored Password:', user.password);
-      console.log('Entered Password:', password);
-
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      console.log('Password Match:', passwordMatch);
-
-      if (passwordMatch) {
-        // Generate a JWT token
-        const token = jwt.sign({ userId: user.id }, 'k01', { expiresIn: '1h' });
-        console.log('token: ', token);
-        // Send the token to the client
-        res.json({ token });
-      } else {
-        console.log('Password does not match:', password);
-        res.status(401).json({ error: 'Invalid credentials' });
-      }
+    // Check if the user exists and the password is correct
+    if (user && password === user.password) {
+      console.log('Password Match:', password);
+      // Generate a JWT token
+      const token = jwt.sign({ userId: user.id }, 'k01', { expiresIn: '1h' });
+      console.log('token: ', token);
+      // Send the token to the client
+      res.json({ token });
     } else {
-      console.log('User not found:', email);
       res.status(401).json({ error: 'Invalid credentials' });
     }
 
