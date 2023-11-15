@@ -40,6 +40,7 @@ app.post('/api/login', async (req, res) => {
     const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
     const result = await client.query(loginQuery);
       console.log('Result rows:', result.rows);
+       console.log('result:', result);
     const user = result.rows[0];
       console.log('user:', user);
     console.log('Stored Password:', user.password);
