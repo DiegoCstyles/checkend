@@ -35,9 +35,9 @@ app.post('/api/login', async (req, res) => {
     await client.connect();
 
     // Retrieve user from the database
-    const loginquery = `SELECT * FROM users WHERE email = ${email}`;
-    console.log('loginquery: ', loginquery);
-    const result = await client.query(loginquery);
+    const loginQuery = 'SELECT * FROM users WHERE email = $1';
+    console.log('loginQuery: ', loginQuery);
+    const result = await client.query(loginQuery, [email]);
     const user = result.rows[0];
     
     // Check if the user exists and the password is correct
