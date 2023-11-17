@@ -181,7 +181,7 @@ app.get('/api/riskItemsUsage', async (req, res) => {
         const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
-        const riskItems = result.rows.map(row => ({
+        const riskItemsUsage = result.rows.map(row => ({
             id: row.id,
             likelihood: row.likelihood,
             impact: row.impact,
