@@ -126,7 +126,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
 // New endpoint to fetch all risk items
 app.get('/api/riskItems', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
-    const itemsPerPage = parseInt(req.query.itemsPerPage) || 5; // Default to 10 items per page
+    const itemsPerPage = parseInt(req.query.itemsPerPage) || 5; // Default to 5 items per page
     const offset = (page - 1) * itemsPerPage;
     try {
         // Create a client for the database connection
@@ -170,14 +170,12 @@ app.get('/api/riskItemsUsage', async (req, res) => {
             connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
-        console.log('here on endpoint');
         
         const fetchQuery = `
             SELECT id, likelihood, impact, date
             FROM risk_items
             WHERE DATE_PART('year', date::date) = DATE_PART('year', CURRENT_DATE);
         `;
-        console.log('fetchQuery: ', fetchQuery);
         const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
@@ -196,7 +194,7 @@ app.get('/api/riskItemsUsage', async (req, res) => {
 });
 
 app.get('/api/lastRiskItems', async (req, res) => {
-    const numberOfLastItems = 5; // Adjust as needed
+    const numberOfLastItems = 8; // Adjust as needed
     try {
         // Create a client for the database connection
         const client = (0, postgres_1.createClient)({
@@ -207,8 +205,9 @@ app.get('/api/lastRiskItems', async (req, res) => {
           SELECT id, title, description
           FROM risk_items
           ORDER BY id DESC
+          LIMIT $1
         `;
-        const result = await client.query(fetchQuery);
+        const result = await client.query(fetchQuery, [numberOfLastItems]);
         // Release the client
         await client.end();
         const lastRiskItems = result.rows.map(row => ({
