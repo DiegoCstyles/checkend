@@ -179,6 +179,7 @@ app.get('/api/riskItemsUsage', async (req, res) => {
             ) AS subquery
             WHERE EXTRACT(YEAR FROM formatted_date) = EXTRACT(YEAR FROM CURRENT_DATE);
         `;
+        console.log('fetchQuery: ', fetchQuery)
         const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
