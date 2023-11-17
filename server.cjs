@@ -175,7 +175,7 @@ app.get('/api/riskItemsUsage', async (req, res) => {
         const fetchQuery = `
             SELECT id, likelihood, impact, date
             FROM risk_items
-            WHERE EXTRACT(YEAR FROM date) = EXTRACT(YEAR FROM CURRENT_DATE);
+            WHERE DATE_PART('year', date) = DATE_PART('year', CURRENT_DATE);
         `;
         console.log('fetchQuery: ', fetchQuery);
         const result = await client.query(fetchQuery);
