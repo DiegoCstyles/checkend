@@ -173,11 +173,8 @@ app.get('/api/riskItemsUsage', async (req, res) => {
         console.log('here on endpoint');
         
         const fetchQuery = `
-            SELECT *
-            FROM (
-                SELECT FORMAT(date, 'YYYY-MM-DD') AS formatted_date
-                FROM risk_items
-            ) AS subquery
+            SELECT id, likelihood, impact, FORMAT(date, 'YYYY-MM-DD') AS formatted_date
+            FROM risk_items
             WHERE EXTRACT(YEAR FROM formatted_date) = EXTRACT(YEAR FROM CURRENT_DATE);
         `;
         console.log('fetchQuery: ', fetchQuery);
