@@ -170,6 +170,7 @@ app.get('/api/riskItemsUsage', async (req, res) => {
             connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
+        console.log('here on endpoint');
         
         const fetchQuery = `
             SELECT *
@@ -179,7 +180,7 @@ app.get('/api/riskItemsUsage', async (req, res) => {
             ) AS subquery
             WHERE EXTRACT(YEAR FROM formatted_date) = EXTRACT(YEAR FROM CURRENT_DATE);
         `;
-        console.log('fetchQuery: ', fetchQuery)
+        console.log('fetchQuery: ', fetchQuery);
         const result = await client.query(fetchQuery);
         // Release the client
         await client.end();
