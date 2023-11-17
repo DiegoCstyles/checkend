@@ -163,6 +163,36 @@ app.get('/api/riskItems', async (req, res) => {
     }
 });
 
+app.get('/api/riskItemsUsage', async (req, res) => {
+    try {
+        // Create a client for the database connection
+        const client = (0, postgres_1.createClient)({
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
+        });
+        await client.connect();
+        
+        const fetchQuery = `
+          SELECT id, likelihood, impact, date
+          FROM risk_items
+          WHERE 
+        `;
+        const result = await client.query(fetchQuery);
+        // Release the client
+        await client.end();
+        const riskItems = result.rows.map(row => ({
+            id: row.id,
+            likelihood: row.likelihood,
+            impact: row.impact,
+            date: row.date,
+        }));
+        res.json(riskItemsUsage);
+    }
+    catch (error) {
+        console.error('Error fetching risk items:', error);
+        return res.status(500).json({ error: 'Failed to fetch risk items from the database' });
+    }
+});
+
 app.get('/api/lastRiskItems', async (req, res) => {
     const numberOfLastItems = 5; // Adjust as needed
     try {
