@@ -172,9 +172,9 @@ app.get('/api/riskItemsUsage', async (req, res) => {
         await client.connect();
         
         const fetchQuery = `
-          SELECT id, likelihood, impact, date
+          SELECT id, likelihood, impact, FORMAT(date, 'YYYY-MM-DD') AS formatted_date
           FROM risk_items
-          WHERE EXTRACT(YEAR FROM date) = EXTRACT(YEAR FROM CURRENT_DATE)
+          WHERE EXTRACT(YEAR FROM date) = EXTRACT(YEAR FROM CURRENT_DATE);
         `;
         const result = await client.query(fetchQuery);
         // Release the client
