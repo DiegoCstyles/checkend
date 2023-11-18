@@ -126,7 +126,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
 // New endpoint to fetch all risk items
 app.get('/api/riskItems', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
-    const itemsPerPage = parseInt(req.query.itemsPerPage) || 5; // Default to 5 items per page
+    const itemsPerPage = parseInt(req.query.itemsPerPage); // Default to 5 items per page
     const offset = (page - 1) * itemsPerPage;
     try {
         // Create a client for the database connection
