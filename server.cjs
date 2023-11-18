@@ -135,7 +135,7 @@ app.get('/api/riskItems', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT id, title, description, planDescription, planFiles, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed
+      SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed
       FROM risk_items
       LIMIT $1 OFFSET $2
     `;
@@ -146,7 +146,7 @@ app.get('/api/riskItems', async (req, res) => {
             id: row.id,
             title: row.title,
             description: row.description,
-            planDescription: row.planDescription,
+            plandescription: row.plandescription,
             planFiles: row.planFiles,
             likelihood: row.likelihood,
             impact: row.impact,
