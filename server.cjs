@@ -76,7 +76,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
         });
         await client.connect();
         const insertQuery = `
-          INSERT INTO risk_items (title, description, plandescription, planFiles, planFilesName, planapproval, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed)
+          INSERT INTO risk_items (title, description, plandescription, planFiles, planFilesName, planapproval, likelihood, impact, date, responsiblechecklist, responsibleplan, completed)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
           RETURNING id
         `;
@@ -91,8 +91,8 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
             newRisk.likelihood || '',
             newRisk.impact || '',
             newRisk.date || '',
-            newRisk.responsibleChecklist || '',
-            newRisk.responsiblePlan || '',
+            newRisk.responsiblechecklist || '',
+            newRisk.responsibleplan || '',
             newRisk.completed ? 1 : 0,
         ];
         const result = await client.query(insertQuery, values);
@@ -111,8 +111,8 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
             likelihood: newRisk.likelihood,
             impact: newRisk.impact,
             date: newRisk.date,
-            responsibleChecklist: newRisk.responsibleChecklist,
-            responsiblePlan: newRisk.responsiblePlan,
+            responsiblechecklist: newRisk.responsiblechecklist,
+            responsibleplan: newRisk.responsibleplan,
             completed: newRisk.completed,
         };
         res.status(201).json(createdRisk);
@@ -135,7 +135,7 @@ app.get('/api/riskItems', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsibleChecklist, responsiblePlan, completed
+      SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsiblechecklist, responsibleplan, completed
       FROM risk_items
       LIMIT $1 OFFSET $2
     `;
@@ -151,8 +151,8 @@ app.get('/api/riskItems', async (req, res) => {
             likelihood: row.likelihood,
             impact: row.impact,
             date: row.date,
-            responsibleChecklist: row.responsibleChecklist,
-            responsiblePlan: row.responsiblePlan,
+            responsiblechecklist: row.responsiblechecklist,
+            responsibleplan: row.responsibleplan,
             completed: row.completed,
         }));
         res.json(riskItems);
