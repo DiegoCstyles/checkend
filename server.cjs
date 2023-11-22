@@ -65,6 +65,34 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.post('/api/generateScenario', async (req, res) => {
+  const { riskData } = req.body;
+  const apiKey = process.env.OPENAI_API_KEY;
+
+  try {
+    const response = await axios.post(
+      'https://api.openai.com/v1/engines/davinci/completions',
+      {
+        prompt: `In the scenario where the organization faces a risk titled '${riskData.title}', with a description '${riskData.description}', and assessed with a likelihood of '${riskData.likelihood}' and an impact of '${riskData.impact}', explore the potential outcomes and impacts on the organization.`,
+        max_tokens: 200,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    );
+
+    if (response.data.choices && response.data.choices.length > 0) {
+      res.send(response.data.choices[0].text.trim());
+    }
+  } catch (error) {
+    console.error('Error generating scenario:', error);
+    res.status(500).send('Error generating scenario.');
+  }
+});
+
 app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
     const newRisk = JSON.parse(req.body.json_data || '{}');
     const planFiles = req.file ? req.file.buffer : null; // Get the uploaded file data
