@@ -26,6 +26,12 @@ app.use((0, cors_1.default)());
 const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 
+const API_ENDPOINT = 'https://api.openai.com/v1/engines/davinci/completions';
+const API_KEY =  process.env.OPENAI_API_KEY; // Replace with your OpenAI API key
+
+const MAX_RETRIES = 5;
+const RETRY_DELAY = 1000; 
+
 app.post('/api/login', async (req, res) => {
   const email = req.body.email;
   const password  = req.body.password;
@@ -66,29 +72,39 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+async function makeRequest(data, retries = 0) {
+  try {
+    const response = await axios.post(API_ENDPOINT, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 429 && retries < MAX_RETRIES) {
+      // Retry after a delay with exponential backoff
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, retries) * RETRY_DELAY));
+      return makeRequest(data, retries + 1);
+    } else {
+      throw error;
+    }
+  }
+}
+
 app.post('/api/generateScenario', async (req, res) => {
   const { riskData } = req.body;
-  const apiKey = process.env.OPENAI_API_KEY;
   console.log('Received riskData:', riskData);
-  console.log('Received apiKey:', apiKey);
 
   try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/engines/davinci/completions',
-      {
-        prompt: `In the scenario where the organization faces a risk titled '${riskData.title}', with a description '${riskData.description}', and assessed with a likelihood of '${riskData.likelihood}' and an impact of '${riskData.impact}', explore the potential outcomes and impacts on the organization.`,
-        max_tokens: 200,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-      }
-    );
-    console.log('OpenAI API Response:', response.data);
-    if (response.data.choices && response.data.choices.length > 0) {
-      res.send(response.data.choices[0].text.trim());
+    const responseData = await makeRequest({
+      prompt: `No cenário em que a organização enfrenta um risco intitulado '${riskData.title}', com uma descrição '${riskData.description}', e avaliado com uma probabilidade de '${riskData.likelihood}' e um impacto de '${riskData.impact}', explore os resultados e impactos potenciais na organização.`,
+      max_tokens: 200,
+    });
+    console.log('OpenAI API Response:', responseData);
+
+    if (responseData.choices && responseData.choices.length > 0) {
+      res.send(responseData.choices[0].text.trim());
     }
   } catch (error) {
     console.error('Error generating scenario:', error);
