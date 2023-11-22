@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const postgres_1 = require("@vercel/postgres");
 const cors_1 = __importDefault(require("cors"));
 const multer_1 = __importDefault(require("multer")); // Import multer for handling file uploads
+const axios = require('axios'); 
 const bodyParser = require('body-parser');
 const streamifier = require('streamifier'); // Import the 'streamifier' package
 const bcrypt = require('bcrypt');
