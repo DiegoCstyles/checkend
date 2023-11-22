@@ -68,6 +68,8 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/generateScenario', async (req, res) => {
   const { riskData } = req.body;
   const apiKey = process.env.OPENAI_API_KEY;
+  console.log('Received riskData:', riskData);
+  console.log('Received apiKey:', apiKey);
 
   try {
     const response = await axios.post(
@@ -83,7 +85,7 @@ app.post('/api/generateScenario', async (req, res) => {
         },
       }
     );
-
+    console.log('OpenAI API Response:', response.data);
     if (response.data.choices && response.data.choices.length > 0) {
       res.send(response.data.choices[0].text.trim());
     }
