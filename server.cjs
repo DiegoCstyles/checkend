@@ -26,11 +26,50 @@ app.use((0, cors_1.default)());
 const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 
-const API_ENDPOINT = 'https://api.openai.com/v1/engines/davinci/completions';
+const API_ENDPOINT = 'https://api.openai.com/v1/engines/text-davinci-002/completions';
 const API_KEY =  process.env.OPENAI_API_KEY; // Replace with your OpenAI API key
 
 const MAX_RETRIES = 2;
 const RETRY_DELAY = 1000; 
+
+async function makeApiRequest(endpoint, requestData, method = 'post') {
+  try {
+    const response = await axios({
+      method,
+      url: endpoint,
+      data: requestData,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`, // Replace with your actual API key
+      },
+    });
+
+    // Handle the API response
+    console.log('Response:', response.data);
+
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error('Error:', error.message);
+    throw error;
+  }
+}
+
+// Example endpoint for making the API request with a test text
+app.post('/api/makeApiRequest', async (req, res) => {
+  const testText = "In a scenario where...";
+  const requestData = {
+    prompt: testText,
+    max_tokens: 200,
+  };
+
+  try {
+    const responseData = await makeApiRequest(API_ENDPOINT, requestData);
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to make API request' });
+  }
+});
 
 app.post('/api/login', async (req, res) => {
   const email = req.body.email;
