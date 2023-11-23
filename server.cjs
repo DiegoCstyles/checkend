@@ -29,7 +29,7 @@ const upload = (0, multer_1.default)({ storage: storage });
 const API_ENDPOINT = 'https://api.openai.com/v1/engines/davinci/completions';
 const API_KEY =  process.env.OPENAI_API_KEY; // Replace with your OpenAI API key
 
-const MAX_RETRIES = 5;
+const MAX_RETRIES = 2;
 const RETRY_DELAY = 1000; 
 
 app.post('/api/login', async (req, res) => {
@@ -47,17 +47,12 @@ app.post('/api/login', async (req, res) => {
     const loginQuery = `SELECT * FROM users WHERE email = '${email}'`;
     const result = await client.query(loginQuery);
     const user = result.rows[0];
- 
-    console.log('Result rows:', result.rows);
-    console.log('result:', result);
-    console.log('user:', user);
 
     // Check if the user exists and the password is correct
     if (user && password === user.password) {
       console.log('Password Match:', password);
       // Generate a JWT token
       const token = jwt.sign({ userId: user.id }, 'k01', { expiresIn: '1h' });
-      console.log('token: ', token);
       // Send the token to the client
       res.json({ token });
     } else {
