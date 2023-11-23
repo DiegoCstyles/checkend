@@ -102,9 +102,13 @@ app.post('/api/generateScenario', async (req, res) => {
       res.send(responseData.choices[0].text.trim());
     }
   } catch (error) {
-    console.error('Error generating scenario:', error);
-    res.status(500).send('Error generating scenario.');
-  }
+      console.error('Error generating scenario:', error);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+      }
+      res.status(500).send('Error generating scenario.');
+    }
 });
 
 app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
