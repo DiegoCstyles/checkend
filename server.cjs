@@ -208,6 +208,45 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
     }
 });
 
+app.post('/api/applyrisk', async (req, res) => {
+    const newAppliedRisk = JSON.parse(req.body.json_data || '{}');
+    
+    try {
+        // Create a client for the database connection
+        const client = (0, postgres_1.createClient)({
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
+        });
+        await client.connect();
+        const insertQuery = `
+          INSERT INTO applied_checklists (Dateapplied, Score, Risk_id)
+          VALUES ($1, $2, $3)
+          RETURNING id
+        `;
+
+        const values = [
+            newRisk.Dateapplied || '',
+            newRisk.Score || '',
+            newRisk.Risk_id || '',
+        ];
+        const result = await client.query(insertQuery, values);
+
+        const id = result.rows[0].id;
+        // Release the client
+        await client.end();
+        const appliedRisk = {
+            id,
+            Dateapplied: newRisk.Dateapplied,
+            Score: newRisk.Score,
+            Risk_id: newRisk.Risk_id,
+        };
+        res.status(201).json(appliedRisk);
+    }
+    catch (error) {
+        console.error('Error applying risk item to the database:', error);
+        return res.status(500).json({ error: 'Failed to apply risk item to database' });
+    }
+});
+
 // New endpoint to fetch all risk items
 app.get('/api/riskItems', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
