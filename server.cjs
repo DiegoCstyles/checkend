@@ -217,16 +217,20 @@ app.post('/api/applyrisk', async (req, res) => {
             connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
         });
         await client.connect();
+
+        // Get the current date and time
+        const currentDate = new Date();
+        
         const insertQuery = `
-          INSERT INTO applied_checklists (Dateapplied, Score, Risk_id)
+          INSERT INTO applied_checklists (dateapplied, score, risk_id)
           VALUES ($1, $2, $3)
           RETURNING id
         `;
 
         const values = [
-            newRisk.Dateapplied || '',
-            newRisk.Score || '',
-            newRisk.Risk_id || '',
+            currentDate.toISOString(),
+            newAppliedRisk.score || '',
+            newAppliedRisk.risk_id || '',
         ];
         const result = await client.query(insertQuery, values);
 
@@ -235,9 +239,9 @@ app.post('/api/applyrisk', async (req, res) => {
         await client.end();
         const appliedRisk = {
             id,
-            Dateapplied: newRisk.Dateapplied,
-            Score: newRisk.Score,
-            Risk_id: newRisk.Risk_id,
+            dateapplied: currentDate.toISOString(), 
+            score: newAppliedRisk.score,
+            risk_id: newAppliedRisk.risk_id,
         };
         res.status(201).json(appliedRisk);
     }
