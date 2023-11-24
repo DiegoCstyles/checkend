@@ -210,6 +210,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
 
 app.post('/api/applyrisk', async (req, res) => {
     const newAppliedRisk = JSON.parse(req.body.json_data || '{}');
+    console.log('newAppliedRisk: ', newAppliedRisk);
     
     try {
         // Create a client for the database connection
@@ -226,14 +227,18 @@ app.post('/api/applyrisk', async (req, res) => {
           VALUES ($1, $2, $3)
           RETURNING id
         `;
+        console.log('insertQuery: ', insertQuery);
 
         const values = [
             currentDate.toISOString(),
             newAppliedRisk.score || '',
             newAppliedRisk.risk_id || '',
         ];
+        console.log('values: ', values);
+        
         const result = await client.query(insertQuery, values);
 
+        console.log('result: ', result);
         const id = result.rows[0].id;
         // Release the client
         await client.end();
