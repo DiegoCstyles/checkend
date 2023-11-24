@@ -231,8 +231,8 @@ app.post('/api/applyrisk', async (req, res) => {
 
         const values = [
             currentDate.toISOString(),
-            newAppliedRisk.score || '',
-            newAppliedRisk.risk_id || '',
+            newAppliedRisk.score || 0,
+            newAppliedRisk.risk_id || 0,
         ];
         console.log('values: ', values);
         
