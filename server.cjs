@@ -209,7 +209,7 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
 });
 
 app.post('/api/applyrisk', async (req, res) => {
-    const newAppliedRisk = JSON.parse(req.body.json_data || '{}');
+    const newAppliedRisk = req.body || {};
     console.log('newAppliedRisk: ', newAppliedRisk);
     
     try {
