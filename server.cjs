@@ -64,9 +64,13 @@ app.post('/api/makeApiRequest', async (req, res) => {
   };
 
   try {
+    console.log('requestData: ', requestData);
+    console.log('API_ENDPOINT: ', API_ENDPOINT);
     const responseData = await makeApiRequest(API_ENDPOINT, requestData);
+    console.log('responseData: ', responseData);
     res.json(responseData);
   } catch (error) {
+    console.log('Caiu aqui');  
     res.status(500).json({ error: 'Failed to make API request' });
   }
 });
