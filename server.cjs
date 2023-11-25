@@ -94,7 +94,7 @@ app.post('/api/generateScenario', async (req, res) => {
   try {
     const responseData = await makeRequest({
       prompt: `No cenário em que a organização enfrenta um risco intitulado '${riskData.title}', com uma descrição '${riskData.description}', e avaliado com uma probabilidade de '${riskData.likelihood}' e um impacto de '${riskData.impact}', explore os resultados e impactos potenciais na organização.`,
-      max_tokens: 300,
+      max_tokens: 500,
     });
     console.log('OpenAI API Response:', responseData);
 
