@@ -32,49 +32,6 @@ const API_KEY =  process.env.OPENAI_API_KEY; // Replace with your OpenAI API key
 const MAX_RETRIES = 2;
 const RETRY_DELAY = 1000; 
 
-async function makeApiRequest(endpoint, requestData, method = 'post') {
-  try {
-    const response = await axios({
-      method,
-      url: endpoint,
-      data: requestData,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`, // Replace with your actual API key
-      },
-    });
-
-    // Handle the API response
-    console.log('Response:', response.data);
-
-    return response.data;
-  } catch (error) {
-    // Handle errors
-    console.error('Error:', error.message);
-    throw error;
-  }
-}
-
-// Example endpoint for making the API request with a test text
-app.post('/api/makeApiRequest', async (req, res) => {
-  const testText = "In a scenario where...";
-  const requestData = {
-    prompt: testText,
-    max_tokens: 200,
-  };
-
-  try {
-    console.log('requestData: ', requestData);
-    console.log('API_ENDPOINT: ', API_ENDPOINT);
-    const responseData = await makeApiRequest(API_ENDPOINT, requestData);
-    console.log('responseData: ', responseData);
-    res.json(responseData);
-  } catch (error) {
-    console.log('Caiu aqui');  
-    res.status(500).json({ error: 'Failed to make API request' });
-  }
-});
-
 app.post('/api/login', async (req, res) => {
   const email = req.body.email;
   const password  = req.body.password;
@@ -137,7 +94,7 @@ app.post('/api/generateScenario', async (req, res) => {
   try {
     const responseData = await makeRequest({
       prompt: `No cenário em que a organização enfrenta um risco intitulado '${riskData.title}', com uma descrição '${riskData.description}', e avaliado com uma probabilidade de '${riskData.likelihood}' e um impacto de '${riskData.impact}', explore os resultados e impactos potenciais na organização.`,
-      max_tokens: 200,
+      max_tokens: 300,
     });
     console.log('OpenAI API Response:', responseData);
 
