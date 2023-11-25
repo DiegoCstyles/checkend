@@ -26,7 +26,7 @@ app.use((0, cors_1.default)());
 const storage = multer_1.default.memoryStorage(); // Store file data in memory
 const upload = (0, multer_1.default)({ storage: storage });
 
-const API_ENDPOINT = 'https://api.openai.com/v1/engines/text-davinci-002/completions';
+const API_ENDPOINT = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
 const API_KEY =  process.env.OPENAI_API_KEY; // Replace with your OpenAI API key
 
 const MAX_RETRIES = 2;
