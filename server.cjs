@@ -89,7 +89,7 @@ async function makeRequest(data, retries = 0) {
 
 app.post('/api/generateScenario', async (req, res) => {
   const { riskData, inputValue } = req.body;
-    
+  console.log('inputValue: ', inputValue);
   try {
     const responseData = await makeRequest({
       prompt: `No cenário em que a organização enfrenta um risco intitulado '${riskData.title}', com uma descrição '${riskData.description}', e avaliado com uma probabilidade de '${riskData.likelihood}' e um impacto de '${riskData.impact}', explore os resultados e impactos potenciais na organização. responda em forma de lista de acordo com o pedido do usuario: '${inputValue}'`,
