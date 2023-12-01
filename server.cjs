@@ -12,7 +12,6 @@ const bodyParser = require('body-parser');
 const streamifier = require('streamifier'); // Import the 'streamifier' package
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { verifyToken } = require('./middleware');
 const format = require('pg-format');
 // Import the 'mime-types' library
 const mimeTypes = require('mime-types');
