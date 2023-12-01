@@ -146,7 +146,7 @@ app.get('/api/getUsers', async (req, res) => {
     }
 
     // Extract user information from the query result
-    const users = result.rows[0];
+    const users = result.rows;
 
     // Send the user information as a response
     res.json(users);
