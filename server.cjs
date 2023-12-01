@@ -124,7 +124,6 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
 });
 
 app.get('/api/getUsers', async (req, res) => {
-  const itemsPerPage = 5; // Default to 5 items per page
   try {
     // Create a client for the database connection
     const client = (0, postgres_1.createClient)({
@@ -134,11 +133,10 @@ app.get('/api/getUsers', async (req, res) => {
 
     // Fetch user information from the database based on the user ID
     const userQuery = `
-      SELECT id, name
+      SELECT *
       FROM users
-      LIMIT $1
     `;
-    const result = await client.query(userQuery, [itemsPerPage]);
+    const result = await client.query(userQuery);
     // Release the client
     await client.end();
 
