@@ -71,8 +71,6 @@ function verifyToken(req, res, next) {
   // Get the token from the Authorization header
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
-  console.log('Received Token:', `Bearer ${token}`);
-
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -81,7 +79,6 @@ function verifyToken(req, res, next) {
     // Verify the token
     const decoded = jwt.verify(token, 'k01');
     req.user = { id: decoded.userId }; // Attach the decoded user information to the request
-    console.log('decoded: ', decoded);
     next(); // Move on to the next middleware or route handler
   } catch (error) {
     console.error('Token verification failed:', error);
@@ -93,8 +90,6 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
   try {
     // Get the user ID from the token
     const userId = req.user.id;
-    console.log('req.user.id: ', req.user.id);
-    console.log('userId: ', userId);
 
     // Create a client for the database connection
     const client = (0, postgres_1.createClient)({
@@ -108,9 +103,7 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
       FROM users
       WHERE id = $1
     `;
-    console.log('userQuery: ', userQuery);
     const result = await client.query(userQuery, [userId]);
-    console.log('result: ', result);
     // Release the client
     await client.end();
 
@@ -127,6 +120,41 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error getting user information' });
+  }
+});
+
+app.get('/api/getUsers', async (req, res) => {
+  const itemsPerPage = 5; // Default to 5 items per page
+  try {
+    // Create a client for the database connection
+    const client = (0, postgres_1.createClient)({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable
+    });
+    await client.connect();
+
+    // Fetch user information from the database based on the user ID
+    const userQuery = `
+      SELECT id, name
+      FROM users
+      LIMIT $1
+    `;
+    const result = await client.query(userQuery, [itemsPerPage]);
+    // Release the client
+    await client.end();
+
+    // Check if the user exists
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Users not found' });
+    }
+
+    // Extract user information from the query result
+    const users = result.rows[0];
+
+    // Send the user information as a response
+    res.json(users);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error getting users information' });
   }
 });
 
@@ -297,10 +325,10 @@ app.get('/api/riskItems', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-      SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsiblechecklist, responsibleplan, completed
-      FROM risk_items
-      LIMIT $1 OFFSET $2
-    `;
+          SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsiblechecklist, responsibleplan, completed
+          FROM risk_items
+          LIMIT $1 OFFSET $2
+        `;
         const result = await client.query(fetchQuery, [itemsPerPage, offset]);
         // Release the client
         await client.end();
