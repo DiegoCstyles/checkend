@@ -81,6 +81,7 @@ function verifyToken(req, res, next) {
     // Verify the token
     const decoded = jwt.verify(token, 'k01');
     req.user = decoded; // Attach the decoded user information to the request
+    console.log('decoded: ', decoded);
     next(); // Move on to the next middleware or route handler
   } catch (error) {
     console.error('Token verification failed:', error);
@@ -92,6 +93,7 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
   try {
     // Get the user ID from the token
     const userId = req.user.id;
+    console.log('req.user.id: ', req.user.id);
     console.log('userId: ', userId);
 
     // Create a client for the database connection
