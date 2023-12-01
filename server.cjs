@@ -257,7 +257,7 @@ app.post('/api/applyrisk', async (req, res) => {
             newAppliedRisk.score || 0,
             newAppliedRisk.location,
             newAppliedRisk.participants,
-            newAppliedRisk.userName || 0,
+            newAppliedRisk.user_id || 0,
             newAppliedRisk.risk_id || 0,
         ];
         console.log('values: ', values);
@@ -274,7 +274,7 @@ app.post('/api/applyrisk', async (req, res) => {
             score: newAppliedRisk.score,
             location: newAppliedRisk.location,
             participants: newAppliedRisk.participants,
-            user_id: newAppliedRisk.userName,
+            user_id: newAppliedRisk.user_id,
             risk_id: newAppliedRisk.risk_id,
         };
         res.status(201).json(appliedRisk);
