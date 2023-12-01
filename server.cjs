@@ -90,6 +90,7 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
   try {
     // Get the user ID from the token
     const userId = req.user.id;
+    console.log('userId: ', userId);
 
     // Create a client for the database connection
     const client = (0, postgres_1.createClient)({
@@ -103,8 +104,9 @@ app.get('/api/getuserinfo', verifyToken, async (req, res) => {
       FROM users
       WHERE id = $1
     `;
+    console.log('userQuery: ', userQuery);
     const result = await client.query(userQuery, [userId]);
-
+    console.log('result: ', result);
     // Release the client
     await client.end();
 
