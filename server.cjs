@@ -327,7 +327,7 @@ app.get('/api/lastRiskItems', async (req, res) => {
         });
         await client.connect();
         const fetchQuery = `
-          SELECT id, title, description
+          SELECT id, title, planapproval
           FROM risk_items
           ORDER BY id DESC
           LIMIT $1
@@ -338,7 +338,7 @@ app.get('/api/lastRiskItems', async (req, res) => {
         const lastRiskItems = result.rows.map(row => ({
             id: row.id,
             title: row.title,
-            description: row.description,
+            planapproval: row.planapproval,
         }));
         res.json(lastRiskItems);
     }
