@@ -71,6 +71,8 @@ function verifyToken(req, res, next) {
   // Get the token from the Authorization header
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
+  console.log('Received Token:', `Bearer ${token}`);
+
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
