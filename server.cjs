@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const streamifier = require('streamifier'); // Import the 'streamifier' package
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { verifyToken } = require('./middleware');
 const format = require('pg-format');
 // Import the 'mime-types' library
 const mimeTypes = require('mime-types');
@@ -64,6 +65,63 @@ app.post('/api/login', async (req, res) => {
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+function verifyToken(req, res, next) {
+  // Get the token from the Authorization header
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, 'k01');
+    req.user = decoded; // Attach the decoded user information to the request
+    next(); // Move on to the next middleware or route handler
+  } catch (error) {
+    console.error('Token verification failed:', error);
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+}
+
+app.get('/api/getuserinfo', verifyToken, async (req, res) => {
+  try {
+    // Get the user ID from the token
+    const userId = req.user.id;
+
+    // Create a client for the database connection
+    const client = (0, postgres_1.createClient)({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable
+    });
+    await client.connect();
+
+    // Fetch user information from the database based on the user ID
+    const userQuery = `
+      SELECT id, name
+      FROM users
+      WHERE id = $1
+    `;
+    const result = await client.query(userQuery, [userId]);
+
+    // Release the client
+    await client.end();
+
+    // Check if the user exists
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Extract user information from the query result
+    const user = result.rows[0];
+
+    // Send the user information as a response
+    res.json(user);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error getting user information' });
   }
 });
 
