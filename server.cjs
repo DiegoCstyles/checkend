@@ -80,7 +80,7 @@ function verifyToken(req, res, next) {
   try {
     // Verify the token
     const decoded = jwt.verify(token, 'k01');
-    req.user = decoded; // Attach the decoded user information to the request
+    req.user = { id: decoded.userId }; // Attach the decoded user information to the request
     console.log('decoded: ', decoded);
     next(); // Move on to the next middleware or route handler
   } catch (error) {
