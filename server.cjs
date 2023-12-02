@@ -185,6 +185,7 @@ app.get('/api/getChecklists', async (req, res) => {
 });
 
 app.get('/api/getAppliedChecklists', async (req, res) => {
+  const item = 1;
   try {
     const client = (0, postgres_1.createClient)({
       connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable
@@ -197,11 +198,10 @@ app.get('/api/getAppliedChecklists', async (req, res) => {
         FROM applied_checklists ac
         JOIN risk_items ri ON ac.risk_id = ri.id
         WHERE ri.planapproval = 'aprovado'
-            AND ac.results = 'não avaliado';
-
+            AND ac.results = 'não avaliado'
+        LIMIT $1;
     `;
-    console.log('appliedChecklistsQuery: ', appliedChecklistsQuery);
-    const result = await client.query(appliedChecklistsQuery);
+    const result = await client.query(appliedChecklistsQuery, [item]);
     
     // Release the client
     await client.end();
