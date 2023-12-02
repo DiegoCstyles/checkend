@@ -186,10 +186,8 @@ app.get('/api/getChecklists', async (req, res) => {
 
 app.get('/api/getAppliedChecklists', async (req, res) => {
   try {
-
-    // Create a client for the database connection
-    const client = createClient({
-      connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    const client = (0, postgres_1.createClient)({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable
     });
     await client.connect();
 
