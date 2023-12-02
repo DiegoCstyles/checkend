@@ -351,8 +351,8 @@ app.get('/api/riskItemsLastApproval', async (req, res) => {
           SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsiblechecklist, responsibleplan, completed
           FROM risk_items    
           WHERE planapproval = 'aprovado' 
-          LIMIT $1
           ORDER BY date DESC
+          LIMIT $1
         `;
         const result = await client.query(fetchQuery, [item]);
         // Release the client
