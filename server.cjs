@@ -156,6 +156,34 @@ app.get('/api/getUsers', async (req, res) => {
   }
 });
 
+app.get('/api/getChecklists', async (req, res) => {
+  try {
+    const client = new Client({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    });
+    await client.connect();
+
+    const checklistQuery = `
+      SELECT *
+      FROM applied_checklists
+    `;
+    const result = await client.query(checklistQuery);
+
+    await client.end();
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Checklists not found' });
+    }
+
+    const checklists = result.rows;
+
+    res.json(checklists);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error getting checklists information' });
+  }
+});
+
 async function makeRequest(data, retries = 0) {
   try {
     const response = await axios.post(API_ENDPOINT, data, {
