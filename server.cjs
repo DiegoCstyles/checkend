@@ -316,6 +316,38 @@ app.post('/api/riskItems', upload.single('planFiles'), async (req, res) => {
     }
 });
 
+app.post('/api/updateChecklistResults/:checklistId', async (req, res) => {
+  const checklistId = req.params.checklistId;
+  const { results } = req.body;
+
+  try {
+
+    const client = (0, postgres_1.createClient)({
+        connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
+    });
+    await client.connect();
+
+    const updateQuery = `
+      UPDATE applied_checklists
+      SET results = $1
+      WHERE id = $2
+    `;
+
+    const values = [results, checklistId];
+
+    await client.query(updateQuery, values);
+
+    // Release the client
+    await client.end();
+
+    res.status(200).json({ message: 'Checklist results updated successfully' });
+  } catch (error) {
+    console.error('Error updating checklist results:', error);
+    res.status(500).json({ error: 'Failed to update checklist results' });
+  }
+});
+
+
 app.post('/api/applyrisk', async (req, res) => {
     const newAppliedRisk = req.body || {};
     console.log('newAppliedRisk: ', newAppliedRisk);
