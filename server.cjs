@@ -379,6 +379,46 @@ app.get('/api/riskItemsLastApproval', async (req, res) => {
     }
 });
 
+app.get('/api/riskItemsLastReproval', async (req, res) => {
+    const item = 1;
+    try {
+        // Create a client for the database connection
+        const client = (0, postgres_1.createClient)({
+            connectionString: process.env.POSTGRES_URL_NON_POOLING, // Set your database connection string as an environment variable in Vercel.
+        });
+        await client.connect();
+        const fetchQuery = `
+          SELECT id, title, description, plandescription, planFiles, likelihood, impact, date, responsiblechecklist, responsibleplan, completed
+          FROM risk_items    
+          WHERE planapproval = 'reprovado' 
+          ORDER BY date DESC
+          LIMIT $1
+        `;
+        console.log('fetchQuery: ', fetchQuery);
+        const result = await client.query(fetchQuery, [item]);
+        // Release the client
+        await client.end();
+        const riskItems = result.rows.map(row => ({
+            id: row.id,
+            title: row.title,
+            description: row.description,
+            plandescription: row.plandescription,
+            planFiles: row.planFiles,
+            likelihood: row.likelihood,
+            impact: row.impact,
+            date: row.date,
+            responsiblechecklist: row.responsiblechecklist,
+            responsibleplan: row.responsibleplan,
+            completed: row.completed,
+        }));
+        res.json(riskItems);
+    }
+    catch (error) {
+        console.error('Error fetching risk items:', error);
+        return res.status(500).json({ error: 'Failed to fetch risk items from the database' });
+    }
+});
+
 // New endpoint to fetch all risk items
 app.get('/api/riskItems', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
