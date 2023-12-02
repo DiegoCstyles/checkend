@@ -354,6 +354,7 @@ app.get('/api/riskItemsLastApproval', async (req, res) => {
           ORDER BY date DESC
           LIMIT $1
         `;
+        console.log('fetchQuery: ', fetchQuery);
         const result = await client.query(fetchQuery, [item]);
         // Release the client
         await client.end();
