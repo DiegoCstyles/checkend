@@ -193,13 +193,12 @@ app.get('/api/getAppliedChecklists', async (req, res) => {
 
     // Fetch applied checklists information from the database based on the condition
     const appliedChecklistsQuery = `
-      SELECT *
-      FROM applied_checklists ac
-      WHERE ac.risk_id IN (
-        SELECT ri.id
-        FROM risk_items ri
+      SELECT ac.*
+        FROM applied_checklists ac
+        JOIN risk_items ri ON ac.risk_id = ri.id
         WHERE ri.planapproval = 'aprovado'
-      )
+            AND ac.results = 'não avaliado';
+
     `;
     console.log('appliedChecklistsQuery: ', appliedChecklistsQuery);
     const result = await client.query(appliedChecklistsQuery);
