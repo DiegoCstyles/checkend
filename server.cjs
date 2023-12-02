@@ -184,6 +184,39 @@ app.get('/api/getChecklists', async (req, res) => {
   }
 });
 
+app.get('/api/getAppliedChecklists', async (req, res) => {
+  try {
+
+    // Create a client for the database connection
+    const client = createClient({
+      connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    });
+    await client.connect();
+
+    // Fetch applied checklists information from the database based on the condition
+    const appliedChecklistsQuery = `
+      SELECT *
+      FROM applied_checklists ac
+      WHERE ac.risk_id IN (
+        SELECT ri.id
+        FROM risk_items ri
+        WHERE ri.planapproval = 'aprovado'
+      )
+    `;
+    console.log('appliedChecklistsQuery: ', appliedChecklistsQuery);
+    const result = await client.query(appliedChecklistsQuery);
+    
+    // Release the client
+    await client.end();
+
+    // Send the applied checklists information as a response
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error getting applied checklists information' });
+  }
+});
+
 async function makeRequest(data, retries = 0) {
   try {
     const response = await axios.post(API_ENDPOINT, data, {
