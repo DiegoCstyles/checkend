@@ -362,8 +362,8 @@ app.post('/api/applyrisk', async (req, res) => {
         const currentDate = new Date();
         
         const insertQuery = `
-          INSERT INTO applied_checklists (dateapplied, score, location, participants, user_id, risk_id)
-          VALUES ($1, $2, $3, $4, $5, $6)
+          INSERT INTO applied_checklists (dateapplied, score, location, participants, user_id, risk_id, results)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
           RETURNING id
         `;
         console.log('insertQuery: ', insertQuery);
@@ -375,6 +375,7 @@ app.post('/api/applyrisk', async (req, res) => {
             newAppliedRisk.participants,
             newAppliedRisk.user_id || 0,
             newAppliedRisk.risk_id || 0,
+            newAppliedRisk.results,
         ];
         console.log('values: ', values);
         
@@ -392,6 +393,7 @@ app.post('/api/applyrisk', async (req, res) => {
             participants: newAppliedRisk.participants,
             user_id: newAppliedRisk.user_id,
             risk_id: newAppliedRisk.risk_id,
+            results: newAppliedRisk.results,
         };
         res.status(201).json(appliedRisk);
     }
